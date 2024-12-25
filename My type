@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #timer {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #text-to-type {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        #user-input {
+            width: 400px;
+            height: 100px;
+            font-size: 18px;
+            padding: 10px;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Typing Practice</h1>
+
+<p id="timer">Time: 00:00</p>
+
+<p id="text-to-type">The quick brown fox jumps over the lazy dog.</p>
+
+<textarea id="user-input" placeholder="Start typing here..."></textarea>
+
+<p id="result"></p>
+
+<script>
+    const timerElement = document.getElementById('timer');
+    const textToType = document.getElementById('text-to-type').innerText;
+    const userInput = document.getElementById('user-input');
+    const resultElement = document.getElementById('result');
+
+    let startTime;
+    let timerInterval;
+    let isTimerRunning = false;
+
+    // Start timer
+    function startTimer() {
+        startTime = Date.now();
+        isTimerRunning = true;
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+        if (isTimerRunning) {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            timerElement.innerText = `Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+    }
+
+    // Check if the user has typed the correct text
+    userInput.addEventListener('input', () => {
+        if (!isTimerRunning) {
+            startTimer();
+        }
+
+        const typedText = userInput.value;
+        if (typedText === textToType) {
+            clearInterval(timerInterval);
+            resultElement.innerText = `Congratulations! You typed the paragraph correctly in ${timerElement.innerText.split(' ')[1]} seconds.`;
+        } else if (textToType.startsWith(typedText)) {
+            resultElement.innerText = '';
+        } else {
+            resultElement.innerText = 'Keep trying!';
+        }
+    });
+</script>
+
+</body>
+</html>
